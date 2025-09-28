@@ -4,7 +4,7 @@
 
 A comprehensive technical sales presentation developed as part of an officially certified enterprise internship program. This project demonstrates advanced pre-sales engineering capabilities through systematic solution design methodology for enterprise financial services modernization.
 
-**Live Presentation:** [View Here](https://chemiui.github.io/solution-presentation--virtual/)
+**Live Presentation:** [View Here](https://chemiui.github.io/solution-presentation/)
 
 ## Enterprise Internship Context
 
