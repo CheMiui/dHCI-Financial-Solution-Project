@@ -8,7 +8,7 @@ A comprehensive technical sales presentation developed as part of an officially 
 
 ## Enterprise Internship Context
 
-**Program Type:** Officially Certified Enterprise Internship  
+**Program Type:** Officially Enterprise Internship Learning Program
 **Certification Level:** Professional Development Track  
 **Focus Area:** Pre-sales Engineering & Technical Solution Architecture  
 **Client Scenario:** ABC Financial Services Infrastructure Modernization  
