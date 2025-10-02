@@ -395,7 +395,7 @@
                                 <p class="text-sm text-slate-600">从项目伊始就思考每个技术决策的成本与收益，让商业价值论证贯穿项目始终，而非最后一周的冲刺。</p>
                             </div>
                             <div class="bg-white/50 p-6 rounded-2xl border-2 border-green-400">
-                                <h4 class="font-semibold text-lg text-slate-700 mb-2">准备更多“What-If”预案</h4>
+                                <h4 class="font-semibold text-lg text-slate-700 mb-2">准备更多"What-If"预案</h4>
                                 <p class="text-sm text-slate-600">除了服务器故障，还应准备业务增长超预期、预算被削减、客户坚持竞品等多种场景的应对策略。</p>
                             </div>
                         </div>
@@ -471,85 +471,189 @@
         // Chart Module 4 is a visual layout, no Chart.js needed.
         
         // Chart Module 5: TCO
-        new Chart(document.getElementById('tcoChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: ['初始投资', '运营与维护', '扩展成本'],
-                datasets: [
-                    { label: '传统CAPEX采购 ($K)', data: [352, 620, 110], backgroundColor: 'rgba(100, 116, 139, 0.7)', borderColor: '#64748b', borderWidth: 2, borderRadius: 6 },
-                    { label: 'HPE GreenLake订阅 ($K)', data: [20, 250, 90], backgroundColor: 'rgba(13, 148, 136, 0.7)', borderColor: '#0d9488', borderWidth: 2, borderRadius: 6 }
-                ]
-            },
-            options: { maintainAspectRatio: false, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, title: { display: true, text: '3年总成本 ($K)' }, grid: { color: 'rgba(0,0,0,0.05)' } } }, plugins: { tooltip: { mode: 'index', intersect: false } } }
-        });
-        
-        // Chart Module 5: Cashflow
-        new Chart(document.getElementById('cashflowChart').getContext('2d'), {
-             type: 'bar',
-            data: {
-                labels: ['Year 0 初始支出', 'Year 1-3 月均支出'],
-                datasets: [
-                    { label: '传统CAPEX ($K)', data: [352, 30], backgroundColor: 'rgba(100, 116, 139, 0.7)', borderColor: '#64748b', borderWidth: 2, borderRadius: 6 },
-                    { label: 'HPE GreenLake ($K)', data: [20, 17.5], backgroundColor: 'rgba(13, 148, 136, 0.7)', borderColor: '#0d9488', borderWidth: 2, borderRadius: 6 }
-                ]
-            },
-            options: { 
-                indexAxis: 'y',
-                maintainAspectRatio: false, 
-                scales: { 
-                    x: { type: 'logarithmic', beginAtZero: true, title: { display: true, text: '支出 ($K, 对数坐标)' }, grid: { color: 'rgba(0,0,0,0.05)' } },
-                    y: { grid: { display: false } } 
-                }, 
-                plugins: { tooltip: { mode: 'index', intersect: false } } 
-            }
-        });
-
         // Chart Module 5: ROI Waterfall
-        const roiChartCtx = document.getElementById('roiChart').getContext('2d');
-        const roiLabels = ['初始投资', '避免停机损失', '运维效率提升', '避免资源浪费', '现金流优化', '最终净回报'];
-        const roiDataPoints = [
-            [0, 630], [630, 3210], [3210, 3510], [3510, 3660], [3660, 3710], [0, 3080]
-        ];
-        
-        new Chart(roiChartCtx, {
+        new Chart(document.getElementById('roiChart').getContext('2d'), {
             type: 'bar',
             data: {
-                labels: roiLabels,
-                datasets: [{
-                    label: '3年收益 ($K)',
-                    data: roiDataPoints,
-                    backgroundColor: (ctx) => {
-                        const i = ctx.dataIndex;
-                        if (i === 0) return 'rgba(239, 68, 68, 0.7)';
-                        if (i === roiLabels.length - 1) return 'rgba(13, 148, 136, 0.8)';
-                        return 'rgba(56, 189, 248, 0.7)';
+                labels: ['当前状态', '初始投资', '避免停机损失', '运维效率提升', '避免资源浪费', '现金流优化', '3年净回报'],
+                datasets: [
+                    {
+                        // 累计线数据集 - 使用高级橙色
+                        label: '累计价值',
+                        data: [0, -630, 1950, 2250, 2400, 2450, 2450],
+                        backgroundColor: 'rgba(255, 255, 255, 0)',
+                        borderColor: 'rgba(245, 158, 11, 0.9)', // 橙色
+                        borderWidth: 2,
+                        type: 'line',
+                        fill: false,
+                        pointRadius: 4,
+                        pointBackgroundColor: 'rgba(245, 158, 11, 1)',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 2,
+                        tension: 0.1, // 轻微弯曲使线条更优雅
+                        order: 1 // 确保线条在条形上方
                     },
-                    borderColor: (ctx) => {
-                        const i = ctx.dataIndex;
-                        if (i === 0) return '#ef4444';
-                        if (i === roiLabels.length - 1) return '#0d9488';
-                        return '#38bdf8';
-                    },
-                    borderWidth: 2, borderRadius: 6, barPercentage: 0.8
-                }]
+                    {
+                        // 主要条形数据集
+                        label: '价值变动',
+                        data: [0, -630, 2580, 300, 150, 50, 2450],
+                        backgroundColor: (ctx) => {
+                            const i = ctx.dataIndex;
+                            const colors = [
+                                'rgba(148, 163, 184, 0.3)',      // 当前状态 - 浅灰
+                                'rgba(239, 68, 68, 0.8)',        // 初始投资 - 红色
+                                'rgba(34, 197, 94, 0.8)',        // 避免停机 - 绿色
+                                'rgba(34, 197, 94, 0.7)',        // 运营效率 - 绿色
+                                'rgba(34, 197, 94, 0.6)',        // 资源浪费 - 绿色
+                                'rgba(34, 197, 94, 0.5)',        // 现金流 - 绿色
+                                'rgba(13, 148, 136, 0.9)'        // 净回报 - 青色
+                            ];
+                            return colors[i];
+                        },
+                        borderColor: (ctx) => {
+                            const i = ctx.dataIndex;
+                            const colors = [
+                                'rgba(148, 163, 184, 0.5)',
+                                'rgba(239, 68, 68, 1)',
+                                'rgba(34, 197, 94, 1)',
+                                'rgba(34, 197, 94, 1)',
+                                'rgba(34, 197, 94, 1)',
+                                'rgba(34, 197, 94, 1)',
+                                'rgba(13, 148, 136, 1)'
+                            ];
+                            return colors[i];
+                        },
+                        borderWidth: 2,
+                        borderRadius: 8, // 更圆润的边角
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.8,
+                        order: 2 // 条形在线条下方
+                    }
+                ]
             },
             options: {
                 maintainAspectRatio: false,
-                scales: { 
-                    y: { beginAtZero: true, title: { display: true, text: '金额 ($K)' }, grid: { color: 'rgba(0,0,0,0.05)' } }, 
-                    x: { grid: { display: false } } 
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            },
+                            color: '#475569'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '累计金额 ($K)',
+                            font: {
+                                size: 14,
+                                weight: '600'
+                            },
+                            color: '#475569',
+                            padding: { top: 0, bottom: 20 }
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.08)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value + 'K';
+                            },
+                            font: {
+                                size: 11
+                            },
+                            color: '#64748b'
+                        }
+                    }
                 },
-                plugins: { 
-                    legend: { display: false }, 
-                    tooltip: { 
-                        callbacks: { 
-                            label: (c) => {
-                                const isNet = c.dataIndex === roiLabels.length - 1;
-                                const value = c.raw[1] - c.raw[0];
-                                return `${isNet ? '净回报' : c.label}: ${value.toFixed(0)}K`;
-                            } 
-                        } 
-                    } 
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            },
+                            color: '#475569',
+                            filter: function(item, chart) {
+                                // 只显示连接线的图例
+                                return item.datasetIndex === 0;
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#1e293b',
+                        bodyColor: '#475569',
+                        borderColor: 'rgba(0,0,0,0.1)',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        boxPadding: 8,
+                        usePointStyle: true,
+                        callbacks: {
+                            label: function(context) {
+                                if (context.datasetIndex === 0) {
+                                    return `累计价值: $${context.raw}K`;
+                                }
+                                
+                                const value = context.raw;
+                                const label = context.label;
+                                
+                                if (label === '当前状态') {
+                                    return '起点: $0';
+                                } else if (label === '3年净回报') {
+                                    return `净回报: $${Math.abs(value)}K`;
+                                } else if (value < 0) {
+                                    return `投资: -$${Math.abs(value)}K`;
+                                } else {
+                                    return `收益: +$${value}K`;
+                                }
+                            },
+                            afterLabel: function(context) {
+                                if (context.datasetIndex === 0) return null;
+                                
+                                const label = context.label;
+                                const value = context.raw;
+                                
+                                const descriptions = {
+                                    '避免停机损失': '金融行业基准: $100K/小时 × 8.6小时/年 × 3年',
+                                    '运维效率提升': '节省300工时/年 × $333/小时 × 3年',
+                                    '避免资源浪费': 'dHCI独立扩展避免传统HCI资源浪费',
+                                    '现金流优化': '释放资本的机会成本(5% × 3年)',
+                                    '初始投资': 'HPE GreenLake 3年订阅模式',
+                                    '3年净回报': `ROI: 389% | 回收期: <7个月 | 总收益: $${(value + 630).toLocaleString()}K`
+                                };
+                                
+                                return descriptions[label] || null;
+                            },
+                            footer: function(context) {
+                                if (context[0].label === '3年净回报') {
+                                    return ['💡 投资回收期仅7个月，389% ROI证明极佳投资价值'];
+                                }
+                                return null;
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
                 }
             }
         });
