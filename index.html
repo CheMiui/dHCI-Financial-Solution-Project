@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HPE解决方案作品集 - Michelle陈美晖</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 
+      信息架构与设计思路 (Information Architecture & Design Plan):
+      本网站旨在将六个独立的项目模块，整合成一个连贯、流畅的单页面滚动式数据故事。
+      - 整体结构: 采用“固定侧边导航 + 滚动内容区”的经典SPA布局。这种结构允许面试官既可以按顺序线性浏览，也可以通过导航快速跳转到感兴趣的模块，兼顾了故事的完整性和探索的自由度。
+      - 视觉风格: 延续并统一了所有模块的高级UI风格——玻璃拟态、动态渐变背景、柔和阴影和平滑动画，确保了从头至尾的视觉一致性和沉浸式体验。
+      - 交互设计: 
+        1. 导航交互: 侧边导航栏的按钮不仅可以实现平滑滚动跳转，还会根据用户当前的浏览位置自动高亮，提供清晰的“你在哪里”的视觉反馈。
+        2. 内容交互: 保留并整合了每个模块的可视化图表，如决策矩阵雷达图、TCO对比条形图、ROI瀑布图等，使数据探索直观且富有吸引力。
+      - 最终目标: 打造一个超越静态PPT或PDF的动态、现代、专业的个人作品集，不仅展示了项目内容，其本身的设计和实现也成为了展示个人能力的另一维度。
+    -->
+    <style>
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Noto Sans SC', sans-serif; 
+            background-color: #f0f4f8;
+        }
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(300deg, #dcfce7, #cffafe, #e0e7ff, #f3e8ff);
+            background-size: 400% 400%;
+            animation: gradientAnimation 20s ease infinite;
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        .sub-card {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .sub-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+        }
+        .nav-item.active { background-color: rgba(13, 148, 136, 0.8); color: white; }
+        .nav-item { transition: all 0.2s ease-in-out; }
+        .chart-container-radar { position: relative; width: 100%; max-width: 500px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        .chart-container-bar { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        .chart-container-waterfall { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 380px; max-height: 450px; }
+    </style>
+</head>
+<body class="text-slate-800">
+    <div class="gradient-bg"></div>
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- 侧边导航栏 -->
+        <aside class="w-full md:w-64 bg-slate-900/70 text-white p-4 md:p-6 shadow-lg md:fixed md:h-full backdrop-filter backdrop-blur-lg border-r border-white/10 z-20">
+            <h1 class="text-2xl font-bold text-teal-300 mb-2">HPE dHCI方案</h1>
+            <p class="text-sm text-slate-300 mb-8">金融级解决方案</p>
+            <nav id="navigation" class="flex flex-row md:flex-col md:space-y-2 overflow-x-auto pb-2 md:pb-0">
+                <a href="#module1" class="nav-item active flex-shrink-0 text-left w-full p-3 rounded-lg hover:bg-slate-700/50">概览</a>
+                <a href="#module2" class="nav-item flex-shrink-0 text-left w-full p-3 rounded-lg hover:bg-slate-700/50">需求分析</a>
+                <a href="#module3" class="nav-item flex-shrink-0 text-left w-full p-3 rounded-lg hover:bg-slate-700/50">技术选型</a>
+                <a href="#module4" class="nav-item flex-shrink-0 text-left w-full p-3 rounded-lg hover:bg-slate-700/50">方案设计</a>
+                <a href="#module5" class="nav-item flex-shrink-0 text-left w-full p-3 rounded-lg hover:bg-slate-700/50">商业价值</a>
+                <a href="#module6" class="nav-item flex-shrink-0 text-left w-full p-3 rounded-lg hover:bg-slate-700/50">成长总结</a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="flex-1 md:ml-64 p-4 sm:p-6 md:p-8 lg:p-12 space-y-12">
+            
+            <!-- 模块一：项目概览与核心贡献 -->
+            <section id="module1">
+                <div class="glass-card p-6 md:p-10">
+                    <!-- 1. 项目高亮 (Header) -->
+                    <div class="text-center mb-12">
+                        <h1 class="text-3xl md:text-4xl font-bold text-teal-800 mb-3">HPE dHCI金融级解决方案</h1>
+                        <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-slate-600 font-medium">
+                            <span><span class="font-bold text-teal-700">HPE官方认证</span> 在线实习项目</span>
+                            <span class="hidden md:inline">|</span>
+                            <span>基于 <span class="font-bold text-teal-700">真实客户案例</span> 与数据</span>
+                        </div>
+                        <div class="mt-4 text-sm text-slate-500">
+                            <span>项目时长: 2024.09 - 2024.11 (2个月)</span><span class="mx-2">•</span><span>我的角色: 解决方案顾问实习生</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. 核心成果与量化贡献 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                        <div class="sub-card p-6 flex flex-col items-center text-center">
+                            <p class="text-5xl font-bold text-teal-700 mb-3">750+</p>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">架构设计</h3>
+                            <p class="text-slate-700 leading-relaxed text-sm">独立完成支持750+ VMs的6节点dHCI架构与300TB全闪存存储配置。</p>
+                        </div>
+                        <div class="sub-card p-6 flex flex-col items-center text-center">
+                            <p class="text-5xl font-bold text-teal-700 mb-3">$150K</p>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">成本优化</h3>
+                            <p class="text-slate-700 leading-relaxed text-sm">通过技术选型与精准sizing，提出3年内节省$150K的dHCI方案。</p>
+                        </div>
+                        <div class="sub-card p-6 flex flex-col items-center text-center">
+                             <p class="text-5xl font-bold text-teal-700 mb-3">All</p>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">专业交付</h3>
+                            <p class="text-slate-700 leading-relaxed text-sm">产出全套技术方案，包含专业架构图、核心方案PPT及演示视频。</p>
+                        </div>
+                    </div>
+
+                    <!-- 3. 项目职责范围 -->
+                    <div class="space-y-8 mb-12">
+                        <div class="sub-card p-8">
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">项目职责</h3>
+                            <ul class="space-y-3 text-slate-700 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                                <li class="flex items-start"><span class="text-teal-500 mr-3 mt-1">●</span><div><strong>客户需求挖掘:</strong> 设计20个结构化问题清单。</div></li>
+                                <li class="flex items-start"><span class="text-teal-500 mr-3 mt-1">●</span><div><strong>产品研究与选型:</strong> 对比SimpliVity/dHCI，做出关键技术决策。</div></li>
+                                <li class="flex items-start"><span class="text-teal-500 mr-3 mt-1">●</span><div><strong>方案设计:</strong> 负责核心Sizing计算与架构设计。</div></li>
+                                <li class="flex items-start"><span class="text-teal-500 mr-3 mt-1">●</span><div><strong>价值呈现:</strong> 制作方案PPT与售前演示视频。</div></li>
+                            </ul>
+                        </div>
+                        <div class="sub-card p-8">
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">团队协作</h3>
+                            <p class="text-slate-700">与团队成员紧密协作，他们负责其他方案（如Zerto灾备）的设计与最终方案的BOM定价，我们共同构成了完整的解决方案。</p>
+                        </div>
+                    </div>
+
+                    <!-- 4. 项目价值总结 -->
+                    <div class="sub-card p-8 text-center bg-slate-500/10">
+                         <h3 class="text-xl font-bold text-slate-800 mb-4">项目价值总结</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="p-4 rounded-2xl bg-green-100/30">
+                                <h4 class="font-bold text-lg text-slate-800">真实性</h4>
+                                <p class="text-sm text-slate-600">基于HPE真实客户案例与CloudPhysics报告</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-green-100/30">
+                                <h4 class="font-bold text-lg text-slate-800">专业性</h4>
+                                <p class="text-sm text-slate-600">由HPE认证导师指导，遵循企业标准流程</p>
+                            </div>
+                             <div class="p-4 rounded-2xl bg-green-100/30">
+                                <h4 class="font-bold text-lg text-slate-800">完整性</h4>
+                                <p class="text-sm text-slate-600">独立走完“需求分析→方案设计→价值论证”完整周期</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 模块二：客户需求分析与深度挖掘 -->
+            <section id="module2">
+                <div class="glass-card p-6 md:p-10">
+                    <div class="mb-10">
+                        <h2 class="text-3xl md:text-4xl font-bold text-teal-800">需求分析与深度挖掘</h2>
+                        <p class="mt-2 text-slate-600 max-w-4xl">展示我如何从模糊信息中提炼核心业务痛点，并将其转化为技术决策依据的能力。</p>
+                    </div>
+                    <div class="sub-card p-8 mb-12">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">分析起点：从模糊信息到结构化探询</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                            <div class="md:pr-8"><h4 class="font-semibold text-lg text-slate-700 mb-2">挑战</h4><p class="text-slate-600">项目启动时，仅获得1页模糊的通话记录，缺乏关键的决策信息。</p></div>
+                            <div class="relative md:pl-8"><div class="absolute left-0 top-0 bottom-0 w-px bg-teal-200 hidden md:block"></div><h4 class="font-semibold text-lg text-slate-700 mb-2">我的行动与方法论</h4><p class="text-slate-600">我主动设计了一套20个结构化问题清单，并采用 <span class="font-bold text-teal-700">“技术现状 → 业务痛点 → 商业损失”</span> 的逻辑框架进行深度挖掘。</p></div>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-6">关键发现：驱动方案决策的四大洞察</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                        <div class="sub-card p-8"><h4 class="text-xl font-bold text-teal-800 mb-3">洞察一：不均衡增长模式</h4><blockquote class="border-l-4 border-teal-300 pl-4 py-2 my-4 bg-teal-50/50 rounded-r-lg"><p class="text-slate-700 italic">“计算资源年增长约10%，但存储需求年增长25%”</p></blockquote><p class="text-slate-600">识别出传统超融合在此场景下会导致巨额资源浪费。这直接成为选择<span class="font-semibold text-teal-700">分离式超融合(dHCI)</span>的核心依据。</p></div>
+                        <div class="sub-card p-8"><h4 class="text-xl font-bold text-teal-800 mb-3">洞察二：性能瓶颈的业务影响</h4><blockquote class="border-l-4 border-teal-300 pl-4 py-2 my-4 bg-teal-50/50 rounded-r-lg"><p class="text-slate-700 italic">“早晨和备份窗口IOPS峰值导致业务响应慢。”</p></blockquote><p class="text-slate-600">将技术瓶颈(50K IOPS)转化为商业风险(客户流失、交易失败)，从而论证了<span class="font-semibold text-teal-700">全闪存NVMe存储</span>的必要性。</p></div>
+                        <div class="sub-card p-8"><h4 class="text-xl font-bold text-teal-800 mb-3">洞察三：灾备的合规与财务风险</h4><blockquote class="border-l-4 border-teal-300 pl-4 py-2 my-4 bg-teal-50/50 rounded-r-lg"><p class="text-slate-700 italic">“当前RTO 12小时 / RPO 24小时。”</p></blockquote><p class="text-slate-600">对标行业标准，计算出潜在停机损失高达<span class="font-semibold text-red-600">$1.2M/年</span>，将此从技术痛点升级为<span class="font-semibold text-red-600">“合规与财务双重风险”</span>。</p></div>
+                        <div class="sub-card p-8"><h4 class="text-xl font-bold text-teal-800 mb-3">洞察四：裸机负载是关键需求</h4><blockquote class="border-l-4 border-teal-300 pl-4 py-2 my-4 bg-teal-50/50 rounded-r-lg"><p class="text-slate-700 italic">“存在50TB裸机负载(数据库、大数据)。”</p></blockquote><p class="text-slate-600">理解到这是虚拟化无法满足的性能需求，从而将<span class="font-semibold text-teal-700">“裸机支持”</span>设为方案选择的<span class="font-semibold text-red-600">否决性条件</span>。</p></div>
+                    </div>
+                    <div class="sub-card p-8 mb-12">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2 text-center">需求优先级：量化决策</h3>
+                         <p class="text-slate-600 text-center mb-6">通过量化加权，我将客户需求转化为一个清晰的可视化决策模型。</p>
+                        <div class="chart-container-bar" style="height: 250px; max-height: 300px;"><canvas id="priorityChart"></canvas></div>
+                    </div>
+                    <div class="sub-card p-8 bg-teal-800/80 text-white">
+                        <h3 class="text-2xl font-bold mb-4 text-center text-teal-200">本阶段展示的核心能力</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                            <div><p class="font-bold text-lg text-white">商业思维</p><p class="text-sm opacity-80">将技术语言(IOPS)翻译为业务语言(客户流失、收入风险)</p></div>
+                            <div><p class="font-bold text-lg text-white">结构化分析</p><p class="text-sm opacity-80">从零散信息中构建清晰的需求优先级模型，支撑技术选型</p></div>
+                            <div><p class="font-bold text-lg text-white">深度挖掘</p><p class="text-sm opacity-80">坚持询问“为什么”，揭示表面需求之下的真实商业驱动力</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 模块三：技术选型与决策逻辑 -->
+            <section id="module3">
+                 <div class="glass-card p-6 md:p-10">
+                    <div class="mb-10"><h2 class="text-3xl md:text-4xl font-bold text-teal-800">技术选型与决策逻辑</h2><p class="mt-2 text-slate-600 max-w-4xl">展示我如何基于客户需求做出最优选择，并理解技术决策背后的商业影响。</p></div>
+                    
+                    <div class="sub-card p-8 mb-12">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4 text-center">研究起点：三大候选架构</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                            <div class="p-6 bg-white/30 rounded-2xl"><h4 class="text-xl font-semibold text-slate-800">HPE SimpliVity</h4><p class="text-slate-600">一体式超融合</p></div>
+                            <div class="p-6 bg-white/50 rounded-2xl border-2 border-teal-400"><h4 class="text-xl font-semibold text-teal-800">HPE Alletra dHCI</h4><p class="text-teal-700 font-medium">分离式超融合</p></div>
+                            <div class="p-6 bg-white/30 rounded-2xl"><h4 class="text-xl font-semibold text-slate-800">HPE Nimble dHCI</h4><p class="text-slate-600">分离式超融合</p></div>
+                        </div>
+                    </div>
+
+                    <div class="sub-card p-8 mb-12">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">核心决策框架：可视化需求匹配度分析</h3>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center font-medium text-center border-b pb-2">
+                                <div class="text-left font-bold text-slate-800">关键决策维度</div>
+                                <div>HPE SimpliVity</div>
+                                <div class="text-teal-700 font-bold">HPE Alletra dHCI</div>
+                                <div>HPE Nimble dHCI</div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center text-sm">
+                                <div class="text-left font-semibold text-slate-700">应对不均衡增长<p class="text-xs font-normal text-slate-500">计算+10%/年 vs 存储+25%/年</p></div>
+                                <div class="p-4 rounded-lg bg-red-100 text-red-800">❌ 捆绑扩展，造成资源浪费</div>
+                                <div class="p-4 rounded-lg bg-green-100 text-green-800 font-bold">✅ 独立扩展，按需投资</div>
+                                <div class="p-4 rounded-lg bg-green-100 text-green-800">✅ 独立扩展</div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center text-sm">
+                                <div class="text-left font-semibold text-slate-700">支持裸机负载<p class="text-xs font-normal text-slate-500">50TB关键数据库</p></div>
+                                <div class="p-4 rounded-lg bg-red-100 text-red-800">❌ 仅支持虚拟化负载</div>
+                                <div class="p-4 rounded-lg bg-green-100 text-green-800 font-bold">✅ 原生支持</div>
+                                <div class="p-4 rounded-lg bg-green-100 text-green-800">✅ 原生支持</div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center text-sm">
+                                <div class="text-left font-semibold text-slate-700">性能目标<p class="text-xs font-normal text-slate-500">消除IOPS瓶颈</p></div>
+                                <div class="p-4 rounded-lg bg-amber-100 text-amber-800">⚠️ 优秀</div>
+                                <div class="p-4 rounded-lg bg-green-100 text-green-800 font-bold">✅ 全闪存NVMe，极致性能</div>
+                                <div class="p-4 rounded-lg bg-amber-100 text-amber-800">⚠️ 优秀</div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center text-sm">
+                                <div class="text-left font-semibold text-slate-700">架构与场景匹配</div>
+                                <div class="p-4 rounded-lg bg-amber-100 text-amber-800">适合中小企业/分支</div>
+                                <div class="p-4 rounded-lg bg-green-100 text-green-800 font-bold">适合企业核心、混合负载</div>
+                                <div class="p-4 rounded-lg bg-amber-100 text-amber-800">适合VDI场景</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-12"><h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">关键否决点：为什么不选其他方案？</h3><div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><div class="sub-card p-8 border-l-8 border-red-400"><h4 class="text-xl font-bold text-red-800 mb-3">否决 SimpliVity</h4><div class="space-y-3 text-slate-700"><p><strong class="text-red-600">» 架构不匹配:</strong> 无法满足“计算与存储独立扩展”的核心需求，3年将造成约 <span class="font-bold text-red-700">$150K</span> 的资源浪费。</p><p><strong class="text-red-600">» 功能缺失:</strong> <span class="font-bold">不支持裸机</span>，无法承载客户50TB的关键数据库。</p></div></div><div class="sub-card p-8 border-l-8 border-amber-400"><h4 class="text-xl font-bold text-amber-800 mb-3">否决 Nimble dHCI</h4><div class="space-y-3 text-slate-700"><p><strong class="text-amber-600">» 场景不匹配:</strong> 更侧重于VDI（虚拟桌面）场景，而非客户的金融核心业务。</p><p><strong class="text-amber-600">» 竞争力不足:</strong> 在性能和管理简易性上相比Alletra dHCI不具优势。</p></div></div></div></div>
+
+                    <div class="sub-card p-8 bg-teal-800/80 text-white">
+                        <h3 class="text-2xl font-bold mb-4 text-center text-teal-200">本阶段展示的核心能力</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                            <div><p class="font-bold text-lg text-white">技术研究能力</p><p class="text-sm opacity-80">短时间内快速理解并区分多种复杂基础架构方案</p></div>
+                            <div><p class="font-bold text-lg text-white">结构化决策</p><p class="text-sm opacity-80">建立清晰对比框架，将客户需求转化为技术选型标准</p></div>
+                            <div><p class="font-bold text-lg text-white">商业技术结合</p><p class="text-sm opacity-80">始终从成本、效率和业务风险角度论证技术选择</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 模块四：解决方案设计与量化决策 -->
+            <section id="module4">
+                 <div class="glass-card p-6 md:p-10">
+                    <div class="mb-10"><h2 class="text-3xl md:text-4xl font-bold text-teal-800">方案设计与量化决策</h2><p class="mt-2 text-slate-600 max-w-4xl">展示我如何进行精确的容量规划，并在成本与风险之间做出专业权衡，最终将需求转化为技术蓝图。</p></div>
+                    
+                    <div class="sub-card p-8 mb-12">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">最终架构蓝图：HPE Alletra dHCI 分离式超融合</h3>
+                        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+                            <div class="lg:col-span-2">
+                                <p class="text-slate-700 mb-4">该架构通过四层分离与全冗余设计，实现了**灵活性、韧性与经济性**的统一。</p>
+                                <div class="space-y-3">
+                                    <p><strong class="text-teal-800 w-24 inline-block">管理层:</strong> HPE GreenLake + vCenter</p>
+                                    <p><strong class="text-teal-800 w-24 inline-block">网络层:</strong> 双25GbE ToR交换机</p>
+                                    <p><strong class="text-teal-800 w-24 inline-block">计算层:</strong> 6 × HPE ProLiant DL380</p>
+                                    <p><strong class="text-teal-800 w-24 inline-block">存储层:</strong> HPE Alletra Storage MP</p>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-3 p-4 bg-white/20 rounded-2xl">
+                                <!-- 架构图插入点 -->
+                                <!-- Michelle, 请将下面的 src 替换为你自己的架构图文件路径, 例如 'images/architecture.png' -->
+                                <img src="https://placehold.co/800x450/e0f2f1/134e4a?text=在此处插入您的架构图" 
+                                     alt="HPE dHCI 解决方案架构图" 
+                                     class="rounded-2xl w-full h-auto object-cover shadow-lg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sub-card p-8 mb-12">
+                         <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">精确的Sizing计算与推导</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div class="bg-white/50 p-6 rounded-2xl">
+                                <h4 class="font-semibold text-lg text-slate-700 mb-3">计算资源 (CPU)</h4>
+                                <code class="block text-sm bg-slate-100 p-3 rounded-lg text-slate-800 whitespace-pre-wrap mb-3">1275 vCPU ÷ 4:1 + 32 裸机 = 351 物理核心需求</code>
+                                <p class="text-sm text-slate-600"><span class="font-bold text-teal-700">配置:</span> 6台 × 64核/台 = 384 物理核心。</p>
+                            </div>
+                             <div class="bg-white/50 p-6 rounded-2xl">
+                                <h4 class="font-semibold text-lg text-slate-700 mb-3">存储资源</h4>
+                                <code class="block text-sm bg-slate-100 p-3 rounded-lg text-slate-800 whitespace-pre-wrap mb-3">300TB × (1.2)³ ≈ 518TB (3年预测)</code>
+                                <p class="text-sm text-slate-600"><span class="font-bold text-teal-700">决策:</span> 结合GreenLake模式，初始配置60TB原始容量，按需扩展。</p>
+                            </div>
+                             <div class="bg-white/50 p-6 rounded-2xl">
+                                <h4 class="font-semibold text-lg text-slate-700 mb-3">性能提升量化</h4>
+                                <div class="space-y-2 text-sm text-slate-600">
+                                   <p><strong class="text-teal-700 w-16 inline-block">IOPS:</strong> 50K → 500K+ (10倍)</p>
+                                   <p><strong class="text-teal-700 w-16 inline-block">延迟:</strong> 20ms → <1ms (20倍)</p>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+
+                    <div class="sub-card p-8 mb-12 bg-white/70">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">核心决策：为什么是6台服务器？</h3>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="p-6 rounded-2xl border-2 border-red-300 bg-red-50/50">
+                                <h4 class="font-bold text-lg text-red-800 mb-2">5台方案 - 否决</h4>
+                                <p class="text-sm text-red-700">正常容量(320核)即无法满足基本需求(351核)，风险极高。</p>
+                            </div>
+                            <div class="p-6 rounded-2xl border-2 border-teal-400 bg-teal-50/50 transform scale-105 shadow-lg">
+                                <h4 class="font-bold text-lg text-teal-800 mb-2">6台方案 - 推荐 (最优平衡点)</h4>
+                                <p class="text-sm text-teal-700 mb-3">虽有9.7%短期超配风险，但通过<strong class="font-semibold">4层风险缓解措施</strong>可完全覆盖：</p>
+                                <ul class="text-xs text-slate-600 list-disc list-inside space-y-1">
+                                    <li>立即执行：临时降级非关键VM</li>
+                                    <li>短期接受：允许4小时内短期超配</li>
+                                    <li>服务保障：GreenLake 4小时硬件更换SLA</li>
+                                    <li>长期规划：支持快速增购第7台</li>
+                                </ul>
+                            </div>
+                            <div class="p-6 rounded-2xl border-2 border-amber-300 bg-amber-50/50">
+                                <h4 class="font-bold text-lg text-amber-800 mb-2">7台方案 - 备选</h4>
+                                <p class="text-sm text-amber-700">提供"零风险"选项，但比6台方案成本高<strong class="font-semibold">+$27K</strong>，存在资源闲置，成本效益较低。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-card p-8 bg-teal-800/80 text-white">
+                        <h3 class="text-2xl font-bold mb-4 text-center text-teal-200">本阶段展示的核心能力</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                            <div><p class="font-bold text-lg">技术量化</p><p class="text-sm opacity-80">将业务需求转化为精确的硬件配置参数</p></div>
+                            <div><p class="font-bold text-lg">架构设计</p><p class="text-sm opacity-80">设计出清晰、冗余且高性能的技术蓝图</p></div>
+                            <div><p class="font-bold text-lg">风险管控</p><p class="text-sm opacity-80">主动识别风险并设计出可行的缓解预案</p></div>
+                            <div><p class="font-bold text-lg">商业权衡</p><p class="text-sm opacity-80">为客户寻找成本与风险之间的“最优解”</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 模块五：商业价值与TCO分析 -->
+            <section id="module5">
+                 <div class="glass-card p-6 md:p-10">
+                    <div class="mb-10"><h2 class="text-3xl md:text-4xl font-bold text-teal-800">商业价值与投资回报分析</h2><p class="mt-2 text-slate-600 max-w-4xl">将技术方案从商业和财务角度进行论证，精准量化投资价值。</p></div>
+                    <div class="sub-card p-8 mb-12"><h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">核心价值主张：从成本中心到价值引擎</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center"><div class="bg-white/50 p-6 rounded-2xl sub-card flex flex-col justify-center"><p class="text-4xl font-bold text-teal-700">42%</p><p class="mt-2 text-slate-700 font-medium">3年TCO节省</p></div><div class="bg-white/50 p-6 rounded-2xl sub-card flex flex-col justify-center"><p class="text-4xl font-bold text-teal-700">$2.45M</p><p class="mt-2 text-slate-700 font-medium">3年净回报</p></div><div class="bg-white/50 p-6 rounded-2xl sub-card flex flex-col justify-center"><p class="text-4xl font-bold text-teal-700">389%</p><p class="mt-2 text-slate-700 font-medium">投资回报率</p></div><div class="bg-white/50 p-6 rounded-2xl sub-card flex flex-col justify-center"><p class="text-4xl font-bold text-teal-700">&lt; 7个月</p><p class="mt-2 text-slate-700 font-medium">投资回收期</p></div></div></div>
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-12">
+                        <div class="sub-card p-8">
+                            <h3 class="text-2xl font-bold text-slate-800 mb-2 text-center">TCO对比：模式创新优化成本</h3>
+                            <div class="chart-container-bar" style="height: 300px;"><canvas id="tcoChart"></canvas></div>
+                        </div>
+                        <div class="sub-card p-8">
+                            <h3 class="text-2xl font-bold text-slate-800 mb-2 text-center">现金流对比：平滑支出</h3>
+                             <div class="chart-container-bar" style="height: 300px;"><canvas id="cashflowChart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="sub-card p-8 mb-12"><h3 class="text-2xl font-bold text-slate-800 mb-2 text-center">ROI分析：价值创造的可视化</h3><div class="chart-container-waterfall"><canvas id="roiChart"></canvas></div></div>
+                    <div class="sub-card p-8 mb-12">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">关键业务指标提升的可视化</h3>
+                        <div class="chart-container-radar" style="max-width: 600px;"><canvas id="kpiImprovementChart"></canvas></div>
+                    </div>
+                     <div class="sub-card p-8 bg-teal-800/80 text-white">
+                        <h3 class="text-2xl font-bold mb-4 text-center text-teal-200">本阶段展示的核心能力</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                            <div><p class="font-bold text-lg">商业翻译</p><p class="text-sm opacity-80">将技术术语转化为高管关注的商业价值</p></div>
+                            <div><p class="font-bold text-lg">财务分析</p><p class="text-sm opacity-80">构建TCO/ROI模型，精准量化投资回报</p></div>
+                            <div><p class="font-bold text-lg">战略思维</p><p class="text-sm opacity-80">分析订阅模式对现金流和企业敏捷性的长期价值</p></div>
+                            <div><p class="font-bold text-lg">风险量化</p><p class="text-sm opacity-80">将“停机风险”量化为具体的财务影响</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 模块六：核心能力与成长证明 -->
+            <section id="module6">
+                <div class="glass-card p-6 md:p-10">
+                    <div class="mb-10"><h2 class="text-3xl md:text-4xl font-bold text-teal-800">成长总结</h2><p class="mt-2 text-slate-600 max-w-4xl">总结我通过本项目实现的飞跃性成长，并证明我已具备目标岗位所需的底层核心能力。</p></div>
+                    <div class="sub-card p-8 mb-12"><h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">成长轨迹：从“技术小白”到“准解决方案顾问”</h3><div class="flex items-center justify-between text-center text-sm md:text-base"><div class="w-1/4"><p class="font-bold text-teal-800">Week 1</p><p class="text-slate-600">需求分析</p></div><div class="w-1/4"><p class="font-bold text-teal-800">Week 2</p><p class="text-slate-600">技术选型</p></div><div class="w-1/4"><p class="font-bold text-teal-800">Week 3</p><p class="text-slate-600">方案设计</p></div><div class="w-1/4"><p class="font-bold text-teal-800">Week 4</p><p class="text-slate-600">价值论证</p></div></div><div class="w-full bg-slate-200 rounded-full h-2.5 my-2"><div class="bg-gradient-to-r from-teal-300 to-indigo-400 h-2.5 rounded-full" style="width: 100%"></div></div><div class="flex justify-between text-xs text-slate-500 px-2"><span>输入: 1页模糊记录</span><span>输出: 一套价值$630K的企业级方案</span></div></div>
+                    <div class="sub-card p-8 mb-12"><h3 class="text-2xl font-bold text-slate-800 mb-2 text-center">能力提升可视化</h3><p class="text-slate-600 text-center mb-6">雷达图直观展示了我在一个月内，在解决方案核心能力维度上的飞跃性成长。</p><div class="chart-container-radar"><canvas id="growthChart"></canvas></div></div>
+                    <div class="sub-card p-8 mb-12">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">如果重做这个项目，我会如何改进？</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-white/50 p-6 rounded-2xl border-2 border-green-400">
+                                <h4 class="font-semibold text-lg text-slate-700 mb-2">更早引入竞品对比</h4>
+                                <p class="text-sm text-slate-600">从第一周就同步研究Dell/Nutanix，能更早地确立HPE dHCI的差异化优势，使论证更具全局视野。</p>
+                            </div>
+                            <div class="bg-white/50 p-6 rounded-2xl border-2 border-green-400">
+                                <h4 class="font-semibold text-lg text-slate-700 mb-2">全程贯穿商业分析</h4>
+                                <p class="text-sm text-slate-600">从项目伊始就思考每个技术决策的成本与收益，让商业价值论证贯穿项目始终，而非最后一周的冲刺。</p>
+                            </div>
+                            <div class="bg-white/50 p-6 rounded-2xl border-2 border-green-400">
+                                <h4 class="font-semibold text-lg text-slate-700 mb-2">准备更多“What-If”预案</h4>
+                                <p class="text-sm text-slate-600">除了服务器故障，还应准备业务增长超预期、预算被削减、客户坚持竞品等多种场景的应对策略。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-card p-8"><h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">我的价值定位与潜力</h3><div class="grid grid-cols-1 lg:grid-cols-3 gap-8"><div class="bg-white/50 p-6 rounded-2xl"><h4 class="text-lg font-semibold text-slate-700 mb-3">我的优势</h4><ul class="space-y-2 text-sm text-slate-600 list-disc list-inside"><li><strong>快速学习能力:</strong> 1个月从零掌握企业级架构。</li><li><strong>商业思维:</strong> 将技术决策与商业价值紧密关联。</li><li><strong>结构化思考:</strong> 善于将复杂问题分解并构建决策框架。</li></ul></div><div class="bg-white/50 p-6 rounded-2xl"><h4 class="text-lg font-semibold text-slate-700 mb-3">我的边界</h4><ul class="space-y-2 text-sm text-slate-600 list-disc list-inside"><li>技术深度和实战经验（如网络调优）仍需在工作中深化。</li><li>TCO模型基于行业基准估算，旨在论证方向性价值。</li></ul></div><div class="bg-teal-50 p-6 rounded-2xl border-2 border-teal-300"><h4 class="text-lg font-semibold text-teal-800 mb-3">我的潜力</h4><p class="text-sm text-teal-700 font-medium">“这个项目证明了我具备‘从不懂到懂’的完整学习路径和思维框架。技术细节可以在工作中快速补足，但解决问题的底层方法论是可复用的。”</p></div></div></div>
+                </div>
+            </section>
+
+            <!-- 水印 -->
+            <footer class="text-center mt-12 mb-4">
+                <p class="text-sm text-slate-500/80">项目报告人: Michelle陈美晖</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Chart.defaults.font.family = "'Noto Sans SC', sans-serif";
+        Chart.defaults.color = '#334155';
+
+        // Navigation
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('#navigation a');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                    });
+                }
+            });
+        }, { threshold: 0.4 });
+        sections.forEach(section => observer.observe(section));
+
+        // Chart Module 2: Priority
+        new Chart(document.getElementById('priorityChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['计算/存储独立扩展', '消除性能瓶颈', '支持混合负载'],
+                datasets: [{
+                    label: '需求权重 (%)',
+                    data: [30, 25, 10],
+                    backgroundColor: [
+                        'rgba(13, 148, 136, 0.7)',
+                        'rgba(15, 118, 110, 0.7)',
+                        'rgba(19, 78, 74, 0.7)'
+                    ],
+                    borderColor: '#0d9488',
+                    borderWidth: 2,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 35,
+                        title: { display: true, text: '权重 (%)' },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    y: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Chart Module 3 is a visual table, no Chart.js needed.
+        
+        // Chart Module 4 is a visual layout, no Chart.js needed.
+        
+        // Chart Module 5: TCO
+        new Chart(document.getElementById('tcoChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['初始投资', '运营与维护', '扩展成本'],
+                datasets: [
+                    { label: '传统CAPEX采购 ($K)', data: [352, 620, 110], backgroundColor: 'rgba(100, 116, 139, 0.7)', borderColor: '#64748b', borderWidth: 2, borderRadius: 6 },
+                    { label: 'HPE GreenLake订阅 ($K)', data: [20, 250, 90], backgroundColor: 'rgba(13, 148, 136, 0.7)', borderColor: '#0d9488', borderWidth: 2, borderRadius: 6 }
+                ]
+            },
+            options: { maintainAspectRatio: false, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, title: { display: true, text: '3年总成本 ($K)' }, grid: { color: 'rgba(0,0,0,0.05)' } } }, plugins: { tooltip: { mode: 'index', intersect: false } } }
+        });
+        
+        // Chart Module 5: Cashflow
+        new Chart(document.getElementById('cashflowChart').getContext('2d'), {
+             type: 'bar',
+            data: {
+                labels: ['Year 0 初始支出', 'Year 1-3 月均支出'],
+                datasets: [
+                    { label: '传统CAPEX ($K)', data: [352, 30], backgroundColor: 'rgba(100, 116, 139, 0.7)', borderColor: '#64748b', borderWidth: 2, borderRadius: 6 },
+                    { label: 'HPE GreenLake ($K)', data: [20, 17.5], backgroundColor: 'rgba(13, 148, 136, 0.7)', borderColor: '#0d9488', borderWidth: 2, borderRadius: 6 }
+                ]
+            },
+            options: { 
+                indexAxis: 'y',
+                maintainAspectRatio: false, 
+                scales: { 
+                    x: { type: 'logarithmic', beginAtZero: true, title: { display: true, text: '支出 ($K, 对数坐标)' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                    y: { grid: { display: false } } 
+                }, 
+                plugins: { tooltip: { mode: 'index', intersect: false } } 
+            }
+        });
+
+        // Chart Module 5: ROI Waterfall
+        const roiChartCtx = document.getElementById('roiChart').getContext('2d');
+        const roiLabels = ['初始投资', '避免停机损失', '运维效率提升', '避免资源浪费', '现金流优化', '最终净回报'];
+        const roiDataPoints = [
+            [0, 630], [630, 3210], [3210, 3510], [3510, 3660], [3660, 3710], [0, 3080]
+        ];
+        
+        new Chart(roiChartCtx, {
+            type: 'bar',
+            data: {
+                labels: roiLabels,
+                datasets: [{
+                    label: '3年收益 ($K)',
+                    data: roiDataPoints,
+                    backgroundColor: (ctx) => {
+                        const i = ctx.dataIndex;
+                        if (i === 0) return 'rgba(239, 68, 68, 0.7)';
+                        if (i === roiLabels.length - 1) return 'rgba(13, 148, 136, 0.8)';
+                        return 'rgba(56, 189, 248, 0.7)';
+                    },
+                    borderColor: (ctx) => {
+                        const i = ctx.dataIndex;
+                        if (i === 0) return '#ef4444';
+                        if (i === roiLabels.length - 1) return '#0d9488';
+                        return '#38bdf8';
+                    },
+                    borderWidth: 2, borderRadius: 6, barPercentage: 0.8
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: { 
+                    y: { beginAtZero: true, title: { display: true, text: '金额 ($K)' }, grid: { color: 'rgba(0,0,0,0.05)' } }, 
+                    x: { grid: { display: false } } 
+                },
+                plugins: { 
+                    legend: { display: false }, 
+                    tooltip: { 
+                        callbacks: { 
+                            label: (c) => {
+                                const isNet = c.dataIndex === roiLabels.length - 1;
+                                const value = c.raw[1] - c.raw[0];
+                                return `${isNet ? '净回报' : c.label}: ${value.toFixed(0)}K`;
+                            } 
+                        } 
+                    } 
+                }
+            }
+        });
+
+        // Chart Module 5: KPI Improvement
+        new Chart(document.getElementById('kpiImprovementChart').getContext('2d'), {
+            type: 'radar',
+            data: {
+                labels: ['性能', '可用性', '扩展性', '运维效率', '成本节省'],
+                datasets: [{
+                    label: '方案提升', data: [10, 9.9, 9, 9.5, 8.5],
+                    borderColor: 'rgba(13, 148, 136, 1)', backgroundColor: 'rgba(13, 148, 136, 0.3)',
+                    pointBackgroundColor: 'rgba(13, 148, 136, 1)', pointBorderColor: '#fff'
+                }]
+            },
+             options: {
+                maintainAspectRatio: false,
+                scales: { r: { beginAtZero: true, max: 10, pointLabels: { font: { size: 14, weight: '500' }, color: '#1e293b' }, ticks: { display: false, stepSize: 2 }, grid: { color: 'rgba(0,0,0,0.08)' }, angleLines: { color: 'rgba(0,0,0,0.08)' } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+
+        // Chart Module 6: Growth
+        new Chart(document.getElementById('growthChart').getContext('2d'), {
+            type: 'radar',
+            data: {
+                labels: ['技术架构理解', '商业价值论证', '结构化问题解决', '需求分析与选型', 'Sizing与风险评估'],
+                datasets: [{
+                    label: '项目前', data: [2, 0, 3, 2, 1],
+                    borderColor: 'rgba(148, 163, 184, 0.8)', backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                    pointBackgroundColor: 'rgba(148, 163, 184, 1)', pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgba(148, 163, 184, 1)'
+                }, {
+                    label: '项目后', data: [7, 7, 8, 8, 7],
+                    borderColor: 'rgba(13, 148, 136, 1)', backgroundColor: 'rgba(13, 148, 136, 0.3)',
+                    pointBackgroundColor: 'rgba(13, 148, 136, 1)', pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgba(13, 148, 136, 1)'
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: { r: { beginAtZero: true, max: 10, pointLabels: { font: { size: 14, weight: '500' }, color: '#1e2b3b' }, ticks: { backdropColor: 'rgba(255, 255, 255, 0.6)', stepSize: 2 }, grid: { color: 'rgba(0,0,0,0.08)' }, angleLines: { color: 'rgba(0,0,0,0.08)' } } },
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    });
+    </script>
+</body>
+</html>
+
+
