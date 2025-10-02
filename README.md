@@ -1,6 +1,8 @@
 # HPE dHCI 金融级解决方案 - 交互式作品集
 
-<!-- [test link](https://chemiui.github.io/dHCI-Financial-Solution-Project/) -->
+[**🌐 点击查看在线交互网站演示 (Click Here)**](https://chemiui.github.io/dHCI-Financial-Solution-Project/)
+
+[![GitHub Pages](https://img.shields.io/badge/GitHub-Pages-blue?logo=github)](https://xn--6qqv7i14ofosyrb.github.io/仓库名/)
 
 这是一个交互式的单页面网页应用(SPA)，旨在动态、深度地展示我在HPE官方在线实习期间，独立完成的一个企业级基础设施解决方案。
 
