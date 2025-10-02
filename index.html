@@ -471,6 +471,153 @@
         // Chart Module 4 is a visual layout, no Chart.js needed.
         
         // Chart Module 5: TCO
+        // Chart Module 5: TCO Comparison
+new Chart(document.getElementById('tcoChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: ['初始投资', '3年运营成本', '扩展成本', '3年总TCO'],
+        datasets: [
+            {
+                label: '传统CAPEX采购',
+                data: [352, 620, 110, 1082],
+                backgroundColor: 'rgba(100, 116, 139, 0.7)',
+                borderColor: '#64748b',
+                borderWidth: 2,
+                borderRadius: 6
+            },
+            {
+                label: 'HPE GreenLake订阅',
+                data: [20, 250, 90, 630],
+                backgroundColor: 'rgba(13, 148, 136, 0.7)',
+                borderColor: '#0d9488',
+                borderWidth: 2,
+                borderRadius: 6
+            }
+        ]
+    },
+    options: {
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                }
+            },
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: '成本 ($K)'
+                },
+                grid: {
+                    color: 'rgba(0,0,0,0.05)'
+                },
+                ticks: {
+                    callback: function(value) {
+                        return '$' + value + 'K';
+                    }
+                }
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.dataset.label || '';
+                        const value = context.raw;
+                        let description = '';
+                        
+                        if (context.label === '初始投资') {
+                            description = context.dataset.label === '传统CAPEX采购' ? 
+                                '硬件+实施一次性投入' : 'GreenLake专业服务费';
+                        } else if (context.label === '3年运营成本') {
+                            description = context.dataset.label === '传统CAPEX采购' ? 
+                                '维保+人力+电力+培训' : '订阅费+简化运维';
+                        } else if (context.label === '扩展成本') {
+                            description = '3年内按需扩容费用';
+                        } else if (context.label === '3年总TCO') {
+                            description = context.dataset.label === '传统CAPEX采购' ? 
+                                '总成本: $1,082K' : '总成本: $630K (节省42%)';
+                        }
+                        
+                        return `${label}: $${value}K | ${description}`;
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Chart Module 5: Cashflow Comparison
+new Chart(document.getElementById('cashflowChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: ['Year 0 初始支出', 'Year 1-3 月均支出'],
+        datasets: [
+            {
+                label: '传统CAPEX采购',
+                data: [352, 30],
+                backgroundColor: 'rgba(100, 116, 139, 0.7)',
+                borderColor: '#64748b',
+                borderWidth: 2,
+                borderRadius: 6
+            },
+            {
+                label: 'HPE GreenLake订阅',
+                data: [20, 17.5],
+                backgroundColor: 'rgba(13, 148, 136, 0.7)',
+                borderColor: '#0d9488',
+                borderWidth: 2,
+                borderRadius: 6
+            }
+        ]
+    },
+    options: {
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                }
+            },
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: '支出 ($K)'
+                },
+                grid: {
+                    color: 'rgba(0,0,0,0.05)'
+                },
+                ticks: {
+                    callback: function(value) {
+                        return '$' + value + 'K';
+                    }
+                }
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.dataset.label || '';
+                        const value = context.raw;
+                        
+                        if (context.label === 'Year 0 初始支出') {
+                            const saving = context.dataset.label === '传统CAPEX采购' ? 
+                                '占用$352K营运资金' : '仅$20K，释放$332K资本';
+                            return `${label}: $${value}K | ${saving}`;
+                        } else {
+                            const saving = context.dataset.label === '传统CAPEX采购' ? 
+                                '月均$30K' : '月均$17.5K (节省42%)';
+                            return `${label}: $${value}K | ${saving}`;
+                        }
+                    }
+                }
+            }
+        }
+    }
+});
         // Chart Module 5: ROI Waterfall
         new Chart(document.getElementById('roiChart').getContext('2d'), {
             type: 'bar',
