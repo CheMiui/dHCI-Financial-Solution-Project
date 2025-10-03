@@ -6,10 +6,10 @@
     <title>HPE解决方案作品集 - Michelle陈美晖</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.4.1/fslightbox.bundle.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.4.1/fslightbox.bundle.min.js"></script>
     <style>
         html { scroll-behavior: smooth; }
         body { 
@@ -57,6 +57,7 @@
         .chart-container-bar { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
         .chart-container-waterfall { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 380px; max-height: 450px; }
         
+        /* Manual Sidebar Toggle & Centered Content Styles */
         @media (min-width: 768px) {
             aside, main {
                 transition: all 0.4s ease-in-out;
@@ -73,6 +74,7 @@
             aside.collapsed + main #sidebar-toggle .icon-close { display: none; }
         }
 
+        /* Interactive Architecture Tooltip */
         .layer-item {
             position: relative;
             transition: transform 0.3s ease-in-out;
@@ -322,6 +324,9 @@
                             </div>
                         </div>
                     </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="sub-card p-8 mb-12">
                          <h3 class="text-2xl font-bold text-slate-800 mb-8 text-center">核心Sizing计算思路：从业务需求到硬件配置</h3>
@@ -403,7 +408,7 @@
 
             <section id="module5">
                  <div class="glass-card p-6 md:p-10">
-                    <div class="mb-10"><h2 class="text-3xl md:text-4xl font-bold text-teal-800">商业价值与投资回报分析</h2><p class="mt-2 text-slate-600 max-w-4xl">展示我如何将技术方案从商业和财务角度进行论证，精准量化投资价值。</p></div>
+                    <div class="mb-10"><h2 class="text-3xl md:text-4xl font-bold text-teal-800">商业价值与投资回报分析</h2><p class="mt-2 text-slate-600 max-w-4xl">将技术方案从商业和财务角度进行论证，精准量化投资价值。</p></div>
                     <div class="sub-card p-8 mb-12"><h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">核心价值主张：从成本中心到价值引擎</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center"><div class="bg-white/50 p-6 rounded-2xl sub-card flex flex-col justify-center"><p class="text-4xl font-bold text-teal-700">42%</p><p class="mt-2 text-slate-700 font-medium">3年TCO节省</p></div><div class="bg-white/50 p-6 rounded-2xl sub-card flex flex-col justify-center"><p class="text-4xl font-bold text-teal-700">$2.45M</p><p class="mt-2 text-slate-700 font-medium">3年净回报</p></div><div class="bg-white/50 p-6 rounded-2xl sub-card flex flex-col justify-center"><p class="text-4xl font-bold text-teal-700">389%</p><p class="mt-2 text-slate-700 font-medium">投资回报率</p></div><div class="bg-white/50 p-6 rounded-2xl sub-card flex flex-col justify-center"><p class="text-4xl font-bold text-teal-700">&lt; 7个月</p><p class="mt-2 text-slate-700 font-medium">投资回收期</p></div></div></div>
                     <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-12"><div class="sub-card p-8"><h3 class="text-2xl font-bold text-slate-800 mb-2 text-center">TCO对比：模式创新优化成本</h3><div class="chart-container-bar" style="height: 300px;"><canvas id="tcoChart"></canvas></div></div><div class="sub-card p-8"><h3 class="text-2xl font-bold text-slate-800 mb-2 text-center">现金流对比：平滑支出</h3><div class="chart-container-bar" style="height: 300px;"><canvas id="cashflowChart"></canvas></div></div></div>
                     <div class="sub-card p-8 mb-12"><h3 class="text-2xl font-bold text-slate-800 mb-2 text-center">ROI分析：价值创造的可视化</h3><div class="chart-container-waterfall"><canvas id="roiChart"></canvas></div></div>
@@ -430,7 +435,7 @@
                             <div class="bg-white/50 p-6 rounded-2xl"><h4 class="text-lg font-semibold text-slate-700 mb-3">我的优势</h4><ul class="space-y-2 text-sm text-slate-600 list-disc list-inside"><li><strong>快速学习能力:</strong> 1个月从零掌握企业级架构。</li><li><strong>商业思维:</strong> 将技术决策与商业价值紧密关联。</li><li><strong>结构化思考:</strong> 善于将复杂问题分解并构建决策框架。</li></ul></div>
                             <div class="bg-white/50 p-6 rounded-2xl"><h4 class="text-lg font-semibold text-slate-700 mb-3">我的改进空间</h4><ul class="space-y-2 text-sm text-slate-600 list-disc list-inside"><li>技术深度和实战经验（如网络调优）仍需在工作中深化。</li><li>TCO模型基于行业基准估算，旨在论证方向性价值。</li></ul></div>
                         </div>
-                        <div class="w-full bg-teal-50 p-6 rounded-2xl border-2 border-teal-300 shadow-lg"><h4 class="text-lg font-semibold text-teal-800 mb-3">经验总结</h4><p class="text-sm text-teal-700 font-medium">“这个项目证明了我具备‘从不懂到懂’的完整学习路径和思维框架。技术细节可以在工作中快速补足，但解决问题的底层方法论是可复用的。”</p></div>
+                        <div class="w-full bg-teal-50 p-6 rounded-2xl border-2 border-teal-300 shadow-lg"><h4 class="text-lg font-semibold text-teal-800 mb-3">经验总结</h4><p class="text-sm text-teal-700 font-medium">“这个项目证明了我具备‘从<strong>0</strong>到<strong>1</strong>’的完整学习路径和思维框架。技术细节可以在工作中快速补足，但解决问题的底层方法论是可复用的。”</p></div>
                     </div>
                 </div>
             </section>
