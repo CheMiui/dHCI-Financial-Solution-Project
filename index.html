@@ -6,7 +6,6 @@
     <title>HPE解决方案作品集 - Michelle陈美晖</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.4.1/fslightbox.bundle.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -579,5 +578,7 @@
         new Chart(document.getElementById('growthChart').getContext('2d'), { type: 'radar', data: { labels: ['技术架构理解', '商业价值论证', '结构化问题解决', '需求分析与选型', 'Sizing与风险评估'], datasets: [{ label: '项目前', data: [2, 0, 3, 2, 1], borderColor: 'rgba(148, 163, 184, 0.8)', backgroundColor: 'rgba(148, 163, 184, 0.2)', pointBackgroundColor: 'rgba(148, 163, 184, 1)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgba(148, 163, 184, 1)' }, { label: '项目后', data: [7, 7, 8, 8, 7], borderColor: 'rgba(13, 148, 136, 1)', backgroundColor: 'rgba(13, 148, 136, 0.3)', pointBackgroundColor: 'rgba(13, 148, 136, 1)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgba(13, 148, 136, 1)' }] }, options: { maintainAspectRatio: false, scales: { r: { beginAtZero: true, max: 10, pointLabels: { font: { size: 14, weight: '500' }, color: '#1e2b3b' }, ticks: { backdropColor: 'rgba(255, 255, 255, 0.6)', stepSize: 2 }, grid: { color: 'rgba(0,0,0,0.08)' }, angleLines: { color: 'rgba(0,0,0,0.08)' } } }, plugins: { legend: { position: 'bottom' } } } });
     });
     </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.4.1/fslightbox.bundle.min.js"></script>
 </body>
 </html>
